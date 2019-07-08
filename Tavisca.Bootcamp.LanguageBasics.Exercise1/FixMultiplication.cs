@@ -4,65 +4,63 @@ namespace Tavisca.Bootcamp.LanguageBasics.Exercise1
 {
     class FixMultiplication
     {
-        private static float value1, value2, answer;
-        private static string temp1 = null, temp2 = null;
-
         public static int FindDigit(string equation)
         {
             string[] splitOnEquals = equation.Split('=');
             string stringAnswer = splitOnEquals[1];
             string[] splitOnMultiply = splitOnEquals[0].Split('*');
-            string stringValue1 = splitOnMultiply[0];
-            string stringValue2 = splitOnMultiply[1];
+            string stringFirstOperand = splitOnMultiply[0];
+            string stringSecondOperand = splitOnMultiply[1];
 
             if (stringAnswer.Contains('?'))
             {
-                CalculateCorrectAnswer(stringValue1, stringValue2, stringAnswer);
+                return CalculateCorrectAnswer(stringFirstOperand, stringSecondOperand, stringAnswer);
             }
-            else if (stringValue1.Contains('?'))
+            else if (stringFirstOperand.Contains('?'))
             {
-                CalculateCorrectValue1(stringValue1, stringValue2, stringAnswer);
+                return CalculateCorrectFirstOperand(stringFirstOperand, stringSecondOperand, stringAnswer);
             }
-            else if (stringValue2.Contains('?'))
+            else
             {
-                CalculateCorrectValue2(stringValue1, stringValue2, stringAnswer);
+                return CalculateCorrectSecondOperand(stringFirstOperand, stringSecondOperand, stringAnswer);
             }
-
-            return FindMissingDigit();
         }
 
-        private static void CalculateCorrectAnswer(string stringValue1, string stringValue2, string stringAnswer)
+        private static int CalculateCorrectAnswer(string stringFirstOperand, string stringSecondOperand, string stringAnswer)
         {
-            value1 = float.Parse(stringValue1);
-            value2 = float.Parse(stringValue2);
-            answer = value1 * value2;
-            temp1 = answer.ToString();
-            temp2 = stringAnswer;
+            float firstOperand, secondOperand, answer;
+
+            firstOperand = float.Parse(stringFirstOperand);
+            secondOperand = float.Parse(stringSecondOperand);
+            answer = firstOperand * secondOperand;
+            return FindMissingDigit(answer.ToString(), stringAnswer);
         }
 
-        private static void CalculateCorrectValue1(string stringValue1, string stringValue2, string stringAnswer)
+        private static int CalculateCorrectFirstOperand(string stringFirstOperand, string stringSecondOperand, string stringAnswer)
         {
-            value2 = float.Parse(stringValue2);
+            float firstOperand, secondOperand, answer;
+
+            secondOperand = float.Parse(stringSecondOperand);
             answer = float.Parse(stringAnswer);
-            value1 = answer / value2;
-            temp1 = value1.ToString();
-            temp2 = stringValue1;
+            firstOperand = answer / secondOperand;
+            return FindMissingDigit(firstOperand.ToString(), stringFirstOperand);
         }
 
-        private static void CalculateCorrectValue2(string stringValue1, string stringValue2, string stringAnswer)
+        private static int CalculateCorrectSecondOperand(string stringFirstOperand, string stringSecondOperand, string stringAnswer)
         {
-            value1 = float.Parse(stringValue1);
+            float firstOperand, secondOperand, answer;
+
+            firstOperand = float.Parse(stringFirstOperand);
             answer = float.Parse(stringAnswer);
-            value2 = answer / value1;
-            temp1 = value2.ToString();
-            temp2 = stringValue2;
+            secondOperand = answer / firstOperand;
+            return FindMissingDigit(secondOperand.ToString(), stringSecondOperand);
         }
 
-        private static int FindMissingDigit()
+        private static int FindMissingDigit(string correctValue, string valueWithQuestionMark)
         {
-            if (temp1.Length == temp2.Length)
+            if (correctValue.Length == valueWithQuestionMark.Length)
             {
-                return int.Parse(temp1[temp2.IndexOf('?')].ToString());
+                return int.Parse(correctValue[valueWithQuestionMark.IndexOf('?')].ToString());
             }
             else
             {
